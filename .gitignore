@@ -1,0 +1,16 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Local servers / build artifacts
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# Partial / scratch data files (the committed webapp_results.json is the canonical one)
+webapp_results.partial.json
+*.log
