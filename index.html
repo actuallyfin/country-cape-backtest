@@ -113,8 +113,41 @@
     margin: 0; color: #333;
   }
   @media (max-width: 720px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 10px;
+    }
+    header { padding: 12px 14px; }
+    header h1 { font-size: 17px; }
+    header .subtitle { font-size: 11.5px; }
+    .sidebar {
+      position: static; top: auto;
+      padding: 14px;
+    }
+    .sidebar h2 { font-size: 12px; }
+    .form-group { margin-bottom: 11px; }
+    .form-group select {
+      font-size: 15px; padding: 9px 10px;
+    }
+    .checkbox-group { gap: 8px; }
+    .checkbox-group label { font-size: 14px; padding: 6px 0; }
+    .checkbox-group input[type=checkbox] { width: 18px; height: 18px; }
+    button.primary { padding: 12px 14px; font-size: 13px; }
+    .panel { padding: 12px 12px; }
+    .panel h3 { font-size: 12px; }
+    .chart-wrap { height: 300px; }
+    #stats-table { font-size: 12px; }
+    #stats-table th, #stats-table td { padding: 6px 8px; }
+    .panel table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
     .glossary dl { grid-template-columns: 1fr; row-gap: 4px; }
     .glossary dd { margin-bottom: 8px; }
+    .glossary summary { font-size: 14px; padding: 6px 0; }
   }
 </style>
 </head>
