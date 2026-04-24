@@ -188,7 +188,15 @@
       </div>
       <div class="panel">
         <h3>Rolling 5-Year CAGR</h3>
-        <div class="chart-wrap"><canvas id="rolling-chart"></canvas></div>
+        <div class="chart-wrap"><canvas id="rolling-cagr-chart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Rolling 5-Year Sharpe</h3>
+        <div class="chart-wrap"><canvas id="rolling-sharpe-chart"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Rolling 5-Year Max Drawdown</h3>
+        <div class="chart-wrap"><canvas id="rolling-maxdd-chart"></canvas></div>
       </div>
       <div class="panel glossary">
         <h3>Glossary &amp; Terminology</h3>
@@ -314,7 +322,7 @@ const PALETTE = [
 
 let DATA = null;
 let growthChart = null;
-let rollingChart = null;
+const rollingCharts = {};
 
 async function load() {
   try {
@@ -516,7 +524,12 @@ function render() {
 
   renderTable(series);
   renderGrowth(series);
-  renderRolling(series);
+  renderRolling(series, "cagr",   "rolling-cagr-chart",
+                "Trailing 5-yr CAGR",      {mul: 100, suffix: "%", dec: 2});
+  renderRolling(series, "sharpe", "rolling-sharpe-chart",
+                "Trailing 5-yr Sharpe",    {mul: 1,   suffix: "",  dec: 2});
+  renderRolling(series, "max_dd", "rolling-maxdd-chart",
+                "Trailing 5-yr Max DD",    {mul: 100, suffix: "%", dec: 2});
 }
 
 function renderTable(series) {
@@ -588,14 +601,14 @@ function renderGrowth(series) {
   });
 }
 
-function renderRolling(series) {
+function renderRolling(series, metric, canvasId, yLabel, fmt) {
   const anchors = DATA.dates.rolling_anchors;
   const datasets = series.map(s => {
     const byYear = {};
-    (s.rolling || []).forEach(r => { byYear[r.anchor_year] = r.cagr; });
+    (s.rolling || []).forEach(r => { byYear[r.anchor_year] = r[metric]; });
     return {
       label: s.label,
-      data: anchors.map(y => byYear[y] == null ? null : byYear[y] * 100),
+      data: anchors.map(y => byYear[y] == null ? null : byYear[y] * fmt.mul),
       borderColor: s.color,
       backgroundColor: s.color,
       borderWidth: s.isStrategy ? 2 : 1.3,
@@ -604,9 +617,9 @@ function renderRolling(series) {
       spanGaps: true,
     };
   });
-  const ctx = document.getElementById("rolling-chart").getContext("2d");
-  if (rollingChart) rollingChart.destroy();
-  rollingChart = new Chart(ctx, {
+  const ctx = document.getElementById(canvasId).getContext("2d");
+  if (rollingCharts[canvasId]) rollingCharts[canvasId].destroy();
+  rollingCharts[canvasId] = new Chart(ctx, {
     type: "line",
     data: { labels: anchors, datasets },
     options: {
@@ -618,7 +631,8 @@ function renderRolling(series) {
         tooltip: {
           callbacks: {
             label: ctx => `${ctx.dataset.label}: ${
-              ctx.parsed.y == null ? "-" : ctx.parsed.y.toFixed(2) + "%"
+              ctx.parsed.y == null ? "-"
+                : ctx.parsed.y.toFixed(fmt.dec) + fmt.suffix
             }`
           }
         }
@@ -626,8 +640,8 @@ function renderRolling(series) {
       scales: {
         x: { title: { display: true, text: "5-year window end-year" },
              ticks: { font: { size: 11 } } },
-        y: { title: { display: true, text: "Trailing 5-yr CAGR" },
-             ticks: { callback: v => v + "%", font: { size: 11 } } }
+        y: { title: { display: true, text: yLabel },
+             ticks: { callback: v => v + fmt.suffix, font: { size: 11 } } }
       }
     }
   });
