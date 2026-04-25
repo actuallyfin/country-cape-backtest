@@ -112,6 +112,10 @@
   .glossary dd {
     margin: 0; color: #333;
   }
+  .glossary a { color: #1e3a5f; text-decoration: underline; word-break: break-word; }
+  .glossary a:hover { color: #0a9396; }
+  .resources ul { margin: 10px 0 4px 18px; padding: 0; list-style: none; font-size: 13px; line-height: 1.6; }
+  .resources li { margin-bottom: 8px; }
   @media (max-width: 720px) {
     .layout {
       grid-template-columns: 1fr;
@@ -341,6 +345,67 @@
               spliced to BIL at its first observation so the return series is
               continuous across the seam.</dd>
           </dl>
+        </details>
+      </div>
+
+      <div class="panel glossary">
+        <h3>Data Sources</h3>
+        <details open>
+          <summary>Sources &amp; coverage</summary>
+          <dl>
+            <dt>MSCI</dt>
+            <dd>Country and benchmark index history — MSCI IMI Net Total Return
+              series for the 44-country universe and the ACWI IMI / Developed
+              IMI / ACWI ex USA IMI benchmarks. Daily data from mid-1997
+              onward. Source: <a href="https://www.msci.com" target="_blank"
+              rel="noopener">msci.com</a>.</dd>
+            <dt>Barclays (early CAPE data)</dt>
+            <dd>Quarterly country CAPE tables published in Barclays' Global
+              Equity Research notes. Covers the 1981 Q4 – 2012 Q4 portion of
+              the CAPE history. Starts with 10 developed markets, adds Emerging
+              Markets coverage through the 1990s and 2000s.</dd>
+            <dt>Meb Faber / The Idea Farm (later CAPE data)</dt>
+            <dd>Quarterly country valuation newsletters compiled by Meb Faber.
+              Covers the 2013 Q1 – present portion of the CAPE history and is
+              the source for all live / forward rebalances. Source:
+              <a href="https://www.theideafarm.com" target="_blank"
+              rel="noopener">theideafarm.com</a>.</dd>
+            <dt>Country coverage over the backtest window</dt>
+            <dd>The investable universe grows as MSCI and Barclays/Faber add
+              countries. Approximate CAPE-eligible country counts:
+              <strong>~13 countries in 1997</strong> (start of the daily
+              post-97 sample), <strong>~25 countries by late 2011</strong>
+              (midpoint), and <strong>~43 countries by 2026</strong> (most
+              recent quarter). The 44-country figure is the cumulative max
+              across the full history.</dd>
+            <dt>Cash proxy</dt>
+            <dd>BIL ETF total return from its 2007-05 inception; synthetic
+              daily series built from FRED TB3MS (3-month T-bill rate) spliced
+              back to 1997 for the pre-BIL span.</dd>
+          </dl>
+        </details>
+      </div>
+
+      <div class="panel glossary resources">
+        <h3>Resources</h3>
+        <details open>
+          <summary>Related reading</summary>
+          <ul>
+            <li><a href="https://www.mebfaber.com" target="_blank"
+              rel="noopener">mebfaber.com</a> — Meb Faber's site. Source of
+              the original Global Value / country CAPE rotation research that
+              this backtest extends.</li>
+            <li><a href="https://www.theideafarm.com" target="_blank"
+              rel="noopener">theideafarm.com</a> — The Idea Farm newsletter;
+              publishes the quarterly country valuation tables that feed the
+              post-2012 CAPE inputs here.</li>
+            <li><a
+              href="https://www.researchaffiliates.com/insights/publications/articles/637-can-momentum-investing-be-saved"
+              target="_blank" rel="noopener">Research Affiliates — "Can
+              Momentum Investing Be Saved?"</a> — Arnott et al. on the
+              fresh-negative momentum concept motivating the fmom 12/8 and
+              12/12 filters in this app.</li>
+          </ul>
         </details>
       </div>
     </div>
