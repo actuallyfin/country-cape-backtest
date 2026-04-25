@@ -310,40 +310,42 @@
         <details>
           <summary>Indices &amp; benchmarks</summary>
           <dl>
+            <dt>Equal-Weight Country Indices</dt>
+            <dd>Equal-weighted portfolio of every CAPE-eligible country in the
+              universe at each rebalance, held until the next quarter-end.
+              Acts as the "no-signal" reference: same investable universe and
+              same quarterly rebal cadence as the CAPE strategies, but without
+              any tilt toward cheap or expensive markets. Built directly from
+              the underlying MSCI IMI Net Total Return country series.</dd>
+            <dt>All World</dt>
+            <dd>MSCI ACWI IMI Net TR (USD). Cap-weighted basket of developed
+              and emerging markets across large, mid, and small cap stocks
+              (~99% of free-float-adjusted global market cap). The headline
+              "global stocks" benchmark; heavily U.S.-weighted in recent years.</dd>
+            <dt>All Developed Markets</dt>
+            <dd>MSCI Developed IMI Net TR (USD). Cap-weighted developed-market
+              stocks across all size tiers, excluding emerging markets. Same
+              construction as All World but with EM removed.</dd>
+            <dt>All world, ex U.S.</dt>
+            <dd>MSCI ACWI ex USA IMI Net TR (USD). Global IMI with the U.S.
+              stripped out — closer in composition to the country-rotation
+              universe, which spends most of its time underweight or out of
+              the U.S.</dd>
+            <dt>T-bills</dt>
+            <dd>U.S. cash proxy. SPDR Bloomberg 1-3 Month T-Bill ETF
+              (ticker: BIL) total return from its 2007-05 inception onward,
+              spliced backward with a synthetic daily series built from the
+              FRED 3-month T-bill secondary-market rate (TB3MS) for 1997-07 to
+              2007-05. Also acts as the risk-free rate in the Sharpe
+              calculation.</dd>
+            <dt>Net Total Return (Net TR)</dt>
+            <dd>The MSCI return convention used here: dividends are reinvested
+              after deducting the withholding taxes a typical foreign investor
+              would pay. More conservative than gross-of-tax returns.</dd>
             <dt>MSCI IMI</dt>
-            <dd>Investable Market Index. Covers large, mid, and small cap
-              (roughly 99% of free-float-adjusted market cap per country). The
-              44-country strategy universe is built from MSCI IMI country
-              series.</dd>
-            <dt>NETR / Net TR</dt>
-            <dd>Net Total Return — reinvests dividends after deducting
-              withholding taxes a foreign investor would pay. The country-level
-              strategy series use NETR.</dd>
-            <dt>MSCI ACWI IMI</dt>
-            <dd>All Country World Index IMI. Global cap-weighted (developed +
-              emerging, all size tiers). The headline "global stocks"
-              benchmark.</dd>
-            <dt>MSCI Developed IMI</dt>
-            <dd>Developed-markets-only version of ACWI IMI. Excludes emerging
-              markets.</dd>
-            <dt>MSCI ACWI ex USA IMI</dt>
-            <dd>Global IMI excluding the U.S. — closer in composition to the
-              country-rotation universe, which historically has limited U.S.
-              exposure.</dd>
-            <dt>EW-44</dt>
-            <dd>Equal-weighted portfolio of all 44 CAPE-eligible countries in
-              the universe, rebalanced quarterly. Useful as a "no-signal"
-              baseline vs. the CAPE-selected baskets.</dd>
-            <dt>BIL</dt>
-            <dd>SPDR Bloomberg 1-3 Month T-Bill ETF. Proxy for the U.S. cash
-              rate from its 2007-05 inception onward. Total-return series
-              (distributions reinvested).</dd>
-            <dt>TB3MS</dt>
-            <dd>FRED series for the 3-month U.S. Treasury bill secondary-market
-              rate, reported monthly. Used to build a synthetic daily cash
-              level for the 1997-07 to 2007-05 span that BIL does not cover;
-              spliced to BIL at its first observation so the return series is
-              continuous across the seam.</dd>
+            <dd>Investable Market Index — covers large, mid, and small cap
+              stocks (roughly 99% of free-float-adjusted market cap per
+              country). All four index benchmarks above are the IMI versions.</dd>
           </dl>
         </details>
       </div>
