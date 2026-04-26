@@ -263,19 +263,12 @@
               8-month (or 12-month) window before that was &gt; 0. Targets
               countries whose downtrend is "fresh" rather than sustained.</dd>
             <dt>Country exclusion (top contributor)</dt>
-            <dd>A fragility check that drops the country which contributed
-              the most to the selected strategy's gross long return over the
-              full live period, then re-runs the same strategy without it.
-              "Top contributor" is identified per (CAPE basket × trend × momentum)
-              combination as the country with the highest
-              <code>Σ<sub>t</sub> w<sub>c,t-1</sub> · r<sub>c,t</sub></code> —
-              its lagged portfolio weight times its daily return, summed over
-              the sample. The country is removed from the investable universe
-              <em>before</em> the CAPE quantile is taken, so the rest of the
-              portfolio is rebuilt from the remaining names. Because the
-              hero is identified using the full-sample outcome, this uses
-              look-ahead information by construction — it is a robustness
-              lens ("does the edge survive losing its single biggest winner?"),
+            <dd>Drops the country that added the most to the selected
+              strategy's gross long return over the full live period
+              (Σ<sub>t</sub> weight × daily return) and re-runs without it.
+              The country is removed before the CAPE quantile is taken, and
+              the "top contributor" is specific to each CAPE × trend × momentum
+              combination. Uses full-sample look-ahead — a fragility check,
               not a tradable signal.</dd>
             <dt>Quarterly rebal</dt>
             <dd>Portfolio weights are recomputed at each CAPE quarter-end and
