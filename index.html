@@ -214,10 +214,17 @@
               <th class="num">Vol</th>
               <th class="num">Sharpe</th>
               <th class="num">Max DD</th>
+              <th class="num">Avg % Invested</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
+        <p style="font-size: 11px; color: #57606a; margin: 8px 2px 0;">
+          <b>Avg % Invested</b> is the time-mean of the daily long-leg
+          weight (sum of country weights, capped at 100%) over each
+          series' live window. The remainder earns the cash rate
+          (non-reinvest mechanic). Benchmarks are always 100% invested.
+        </p>
       </div>
       <div class="panel">
         <h3>Growth of $10,000 (log scale)</h3>
@@ -553,11 +560,11 @@ function findRun(cape, trend, cost, ex, mom) {
 
 const SHORT = {
   cape: {
-    bot10: "cheap 10% CAPE", bot15: "cheap 15% CAPE",
-    bot25: "cheap 25% CAPE", bot50: "cheap 50% CAPE",
-    top10: "expensive 10% CAPE", top15: "expensive 15% CAPE",
-    top25: "expensive 25% CAPE", top50: "expensive 50% CAPE",
-    none: "full universe EW",
+    bot10: "Cheap 10% CAPE", bot15: "Cheap 15% CAPE",
+    bot25: "Cheap 25% CAPE", bot50: "Cheap 50% CAPE",
+    top10: "Expensive 10% CAPE", top15: "Expensive 15% CAPE",
+    top25: "Expensive 25% CAPE", top50: "Expensive 50% CAPE",
+    none: "Full universe EW",
   },
   trend: {
     sma150_up: "150d up", sma200_up: "200d up", sma250_up: "250d up",
@@ -674,6 +681,7 @@ function renderTable(series) {
       <td class="num">${fmtPct(s.stats.vol)}</td>
       <td class="num">${fmtNum(s.stats.sharpe)}</td>
       <td class="num">${fmtPctSigned(s.stats.max_dd)}</td>
+      <td class="num">${fmtPct(s.stats.avg_long)}</td>
     `;
     tb.appendChild(tr);
   }
