@@ -431,15 +431,20 @@ const PALETTE = [
   "#55a630", "#7b2cbf", "#0077b6"
 ];
 
+// DATA_VERSION is auto-patched by precompute_webapp_grid.py — do not edit
+// by hand. Mirrors meta.generated_at_utc from the latest JSON build.
+const DATA_VERSION = "20260426T050020";
+
 let DATA = null;
 let growthChart = null;
 const rollingCharts = {};
 
 async function load() {
   try {
-    // Cache-bust on every load; the JSON is regenerated rarely but when it
-    // is, GitHub Pages and browser caches must be bypassed immediately.
-    const resp = await fetch("webapp_results.json?v=" + Date.now());
+    // Cache-bust by JSON build version, not wall clock. Auto-patched by
+    // precompute_webapp_grid.py on every regen, so a stale browser cache
+    // is invalidated on the first visit after a new precompute.
+    const resp = await fetch("webapp_results.json?v=" + DATA_VERSION);
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     DATA = await resp.json();
   } catch (e) {
