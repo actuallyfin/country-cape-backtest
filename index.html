@@ -262,11 +262,21 @@
               went negative — i.e., current 12-month &lt; 0 AND the prior
               8-month (or 12-month) window before that was &gt; 0. Targets
               countries whose downtrend is "fresh" rather than sustained.</dd>
-            <dt>Country exclusion</dt>
-            <dd>A robustness toggle that removes the single country with the
-              best or worst standalone buy-and-hold Sharpe over the full sample
-              from the investable universe. Uses look-ahead information —
-              meant as a sensitivity check, not a tradable signal.</dd>
+            <dt>Country exclusion (top contributor)</dt>
+            <dd>A fragility check that drops the country which contributed
+              the most to the selected strategy's gross long return over the
+              full live period, then re-runs the same strategy without it.
+              "Top contributor" is identified per (CAPE basket × trend × momentum)
+              combination as the country with the highest
+              <code>Σ<sub>t</sub> w<sub>c,t-1</sub> · r<sub>c,t</sub></code> —
+              its lagged portfolio weight times its daily return, summed over
+              the sample. The country is removed from the investable universe
+              <em>before</em> the CAPE quantile is taken, so the rest of the
+              portfolio is rebuilt from the remaining names. Because the
+              hero is identified using the full-sample outcome, this uses
+              look-ahead information by construction — it is a robustness
+              lens ("does the edge survive losing its single biggest winner?"),
+              not a tradable signal.</dd>
             <dt>Quarterly rebal</dt>
             <dd>Portfolio weights are recomputed at each CAPE quarter-end and
               traded 10 business days later to allow for valuation data to be
@@ -454,7 +464,7 @@ const DIM_ORDER = {
   trend: ["sma150_up", "sma200_up", "sma250_up",
           "sma150_down", "sma200_down", "sma250_down", "none"],
   mom: ["mom_none", "mom_std12", "mom_fmom128", "mom_fmom1212"],
-  ex: ["ex_none", "ex_best", "ex_worst", "ex_both"],
+  ex: ["ex_none", "ex_best"],
 };
 
 function populateSelect(id, dimKey) {
@@ -472,14 +482,14 @@ function populateSelect(id, dimKey) {
 
 function updateExclusionLabels() {
   // Re-label the country-exclusion options based on the currently selected
-  // (cape, trend, mom). The top/bottom contributor differs per strategy --
+  // (cape, trend, mom). The top contributor differs per strategy --
   // names are read from DATA.meta.contributors[cape__trend__mom].
   const cape = document.getElementById("cape").value;
   const trend = document.getElementById("trend").value;
   const mom = document.getElementById("mom").value;
   const key = `${cape}__${trend}__${mom}`;
   const c = (DATA.meta.contributors && DATA.meta.contributors[key])
-    || { best: null, worst: null };
+    || { best: null };
   const sel = document.getElementById("ex");
   for (const opt of sel.options) {
     if (opt.value === "ex_none") {
@@ -488,18 +498,6 @@ function updateExclusionLabels() {
       opt.textContent = c.best
         ? `Exclude ${c.best} (top contributor for this strategy)`
         : "Exclude top contributor (n/a — strategy never holds anything)";
-    } else if (opt.value === "ex_worst") {
-      opt.textContent = c.worst
-        ? `Exclude ${c.worst} (bottom contributor for this strategy)`
-        : "Exclude bottom contributor (n/a — strategy never holds anything)";
-    } else if (opt.value === "ex_both") {
-      if (c.best && c.worst && c.best !== c.worst) {
-        opt.textContent = `Exclude ${c.best} and ${c.worst}`;
-      } else if (c.best) {
-        opt.textContent = `Exclude ${c.best} (only one country ever held)`;
-      } else {
-        opt.textContent = "Exclude top and bottom contributors (n/a)";
-      }
     }
   }
 }
@@ -578,7 +576,7 @@ const SHORT = {
     mom_fmom128: "fmom 12/8", mom_fmom1212: "fmom 12/12",
   },
   ex: {
-    ex_none: null, ex_best: "ex best", ex_worst: "ex worst", ex_both: "ex best+worst",
+    ex_none: null, ex_best: "ex best",
   },
 };
 
