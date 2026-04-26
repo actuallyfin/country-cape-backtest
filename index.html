@@ -437,7 +437,9 @@ const rollingCharts = {};
 
 async function load() {
   try {
-    const resp = await fetch("webapp_results.json");
+    // Cache-bust on every load; the JSON is regenerated rarely but when it
+    // is, GitHub Pages and browser caches must be bypassed immediately.
+    const resp = await fetch("webapp_results.json?v=" + Date.now());
     if (!resp.ok) throw new Error("HTTP " + resp.status);
     DATA = await resp.json();
   } catch (e) {
