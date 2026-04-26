@@ -464,19 +464,44 @@ function populateSelect(id, dimKey) {
     if (!(key in labels)) continue;
     const opt = document.createElement("option");
     opt.value = key;
-    let label = labels[key];
-    // Inject country names for best/worst exclusions
-    if (dimKey === "ex") {
-      const best = DATA.meta.best_country_by_full_sample_sharpe;
-      const worst = DATA.meta.worst_country_by_full_sample_sharpe;
-      if (key === "ex_best")  label = `Exclude ${best} (best full-sample Sharpe)`;
-      if (key === "ex_worst") label = `Exclude ${worst} (worst full-sample Sharpe)`;
-      if (key === "ex_both")  label = `Exclude ${best} and ${worst}`;
-    }
-    opt.textContent = label;
+    opt.textContent = labels[key];
     sel.appendChild(opt);
   }
   sel.value = DEFAULTS[dimKey];
+}
+
+function updateExclusionLabels() {
+  // Re-label the country-exclusion options based on the currently selected
+  // (cape, trend, mom). The top/bottom contributor differs per strategy --
+  // names are read from DATA.meta.contributors[cape__trend__mom].
+  const cape = document.getElementById("cape").value;
+  const trend = document.getElementById("trend").value;
+  const mom = document.getElementById("mom").value;
+  const key = `${cape}__${trend}__${mom}`;
+  const c = (DATA.meta.contributors && DATA.meta.contributors[key])
+    || { best: null, worst: null };
+  const sel = document.getElementById("ex");
+  for (const opt of sel.options) {
+    if (opt.value === "ex_none") {
+      opt.textContent = "Include all eligible countries";
+    } else if (opt.value === "ex_best") {
+      opt.textContent = c.best
+        ? `Exclude ${c.best} (top contributor for this strategy)`
+        : "Exclude top contributor (n/a — strategy never holds anything)";
+    } else if (opt.value === "ex_worst") {
+      opt.textContent = c.worst
+        ? `Exclude ${c.worst} (bottom contributor for this strategy)`
+        : "Exclude bottom contributor (n/a — strategy never holds anything)";
+    } else if (opt.value === "ex_both") {
+      if (c.best && c.worst && c.best !== c.worst) {
+        opt.textContent = `Exclude ${c.best} and ${c.worst}`;
+      } else if (c.best) {
+        opt.textContent = `Exclude ${c.best} (only one country ever held)`;
+      } else {
+        opt.textContent = "Exclude top and bottom contributors (n/a)";
+      }
+    }
+  }
 }
 
 function initUI() {
@@ -484,6 +509,7 @@ function initUI() {
   populateSelect("trend", "trend");
   populateSelect("mom",   "mom");
   populateSelect("ex",    "ex");
+  updateExclusionLabels();
   document.getElementById("cost").value = DEFAULTS.cost;
 
   const benchBox = document.getElementById("bench-checks");
@@ -504,12 +530,18 @@ function initUI() {
   ["cape", "trend", "mom", "ex", "cost"].forEach(id => {
     document.getElementById(id).addEventListener("change", render);
   });
+  // The top/bottom contributor changes with cape/trend/mom -- relabel the
+  // exclusion dropdown when those change so the user sees the right country.
+  ["cape", "trend", "mom"].forEach(id => {
+    document.getElementById(id).addEventListener("change", updateExclusionLabels);
+  });
   benchBox.addEventListener("change", render);
   document.getElementById("run-btn").addEventListener("click", render);
   document.getElementById("reset-btn").addEventListener("click", () => {
     for (const [k, v] of Object.entries(DEFAULTS)) {
       document.getElementById(k).value = v;
     }
+    updateExclusionLabels();
     render();
   });
 
