@@ -255,6 +255,26 @@
             (midpoint), and <strong>~43 countries by 2026</strong> (most
             recent quarter). The 44-country figure is the cumulative max
             across the full history.</p>
+          <p><b>Why the strategy can start in January 1997.</b> Daily
+            MSCI IMI Net history begins 1997-01-01, but the 200-day SMA
+            and 12-month fresh-momentum signals need ~9-24 months of
+            prior history to evaluate. To avoid leaving the first ~3
+            months of the sample as forced cash (and to enable the fmom
+            filter from day one), pre-1997 history is bridged in from
+            the MSCI Country Standard (Large+Mid Cap) Gross monthly
+            series. Each country's monthly levels are scale-adjusted so
+            the last pre-IMI value lines up exactly with the first daily
+            IMI value, then linearly interpolated onto the same Mon-Fri
+            business-day calendar the daily IMI panel uses. This bridged
+            panel is used <em>only</em> as input to the SMA and
+            momentum-filter signals — it never feeds strategy returns,
+            CAPE selection, or the daily price comparison against the
+            SMA. From ~1999-01 onward, daily history is long enough to
+            cover both the 200-day SMA and the 12/8 fresh-momentum
+            lookbacks on its own and the bridge becomes inert. Net
+            effect: the strategy goes live on the first quarterly
+            rebalance trade date after daily IMI starts (1997-01-15)
+            instead of waiting until late 1997.</p>
         </details>
       </div>
 
@@ -366,7 +386,7 @@
             <dd>U.S. cash proxy. SPDR Bloomberg 1-3 Month T-Bill ETF
               (ticker: BIL) total return from its 2007-05 inception onward,
               spliced backward with a synthetic daily series built from the
-              FRED 3-month T-bill secondary-market rate (TB3MS) for 1997-07 to
+              FRED 3-month T-bill secondary-market rate (TB3MS) for 1997-01 to
               2007-05. Also acts as the risk-free rate in the Sharpe
               calculation.</dd>
             <dt>Net Total Return (Net TR)</dt>
@@ -389,12 +409,14 @@
             <dt>MSCI</dt>
             <dd>Country and benchmark index history — MSCI IMI Net Total Return
               series for the 44-country universe and the ACWI IMI / Developed
-              IMI / ACWI ex USA IMI benchmarks. Daily data from mid-1997
-              onward. Source: <a href="https://www.msci.com" target="_blank"
+              IMI / ACWI ex USA IMI benchmarks. Daily data from January 1997
+              onward; pre-1997 monthly history (MSCI Standard, scale-adjusted)
+              is bridged in only to populate the early SMA and momentum
+              signals. Source: <a href="https://www.msci.com" target="_blank"
               rel="noopener">msci.com</a>.</dd>
             <dt>Barclays (early CAPE data)</dt>
             <dd>Quarterly country CAPE tables published in Barclays' Global
-              Equity Research notes. Provides the 1997 Q2 – 2012 Q4 portion of
+              Equity Research notes. Provides the 1996 Q4 – 2012 Q4 portion of
               the CAPE history used here — starting with 13 countries and
               growing to 25 as Barclays added Emerging Markets coverage through
               the 2000s.</dd>
@@ -446,7 +468,7 @@ const PALETTE = [
 
 // DATA_VERSION is auto-patched by precompute_webapp_grid.py — do not edit
 // by hand. Mirrors meta.generated_at_utc from the latest JSON build.
-const DATA_VERSION = "20260426T050020";
+const DATA_VERSION = "20260427T221013";
 
 let DATA = null;
 let growthChart = null;
