@@ -219,12 +219,6 @@
           </thead>
           <tbody></tbody>
         </table>
-        <p style="font-size: 11px; color: #57606a; margin: 8px 2px 0;">
-          <b>Avg % Invested</b> is the time-mean of the daily long-leg
-          weight (sum of country weights, capped at 100%) over each
-          series' live window. The remainder earns the cash rate
-          (non-reinvest mechanic). Benchmarks are always 100% invested.
-        </p>
       </div>
       <div class="panel">
         <h3>Growth of $10,000 (log scale)</h3>
@@ -243,8 +237,30 @@
         <div class="chart-wrap"><canvas id="rolling-maxdd-chart"></canvas></div>
       </div>
       <div class="panel glossary">
+        <h3>About</h3>
+        <details>
+          <summary>About this tool</summary>
+          <p>This page is an interactive country-CAPE rotation backtester.
+            It lets you mix and match a CAPE basket (cheap or expensive
+            countries by Shiller P/E), an SMA trend filter, a momentum
+            filter, and a country-exclusion robustness check, then compares
+            the result to common global benchmarks. All combinations are
+            precomputed offline; selecting from the dropdowns just looks up
+            the matching run, so charts update instantly.</p>
+          <p><b>Country coverage over the backtest window.</b> The
+            investable universe grows as MSCI and Barclays/Faber add
+            countries. Approximate CAPE-eligible country counts:
+            <strong>~13 countries in 1997</strong> (start of the daily
+            post-97 sample), <strong>~25 countries by late 2011</strong>
+            (midpoint), and <strong>~43 countries by 2026</strong> (most
+            recent quarter). The 44-country figure is the cumulative max
+            across the full history.</p>
+        </details>
+      </div>
+
+      <div class="panel glossary">
         <h3>Glossary &amp; Terminology</h3>
-        <details open>
+        <details>
           <summary>Strategy terms</summary>
           <dl>
             <dt>CAPE</dt>
@@ -308,6 +324,11 @@
             <dt>Max DD</dt>
             <dd>Maximum peak-to-trough decline of the cumulative return series
               over the sample. Expressed as a negative percentage.</dd>
+            <dt>Avg % Invested</dt>
+            <dd>Time-mean of the daily long-leg weight (sum of country
+              weights, capped at 100%) over each series' live window. The
+              remainder earns the cash rate via the non-reinvest mechanic.
+              Equity benchmarks are always 100% invested; T-bills 0%.</dd>
             <dt>Rolling 5-Year CAGR</dt>
             <dd>Trailing 5-calendar-year CAGR anchored at each year-end from
               2001 onward. Shows how the strategy's compounding experience
@@ -362,7 +383,7 @@
 
       <div class="panel glossary">
         <h3>Data Sources</h3>
-        <details open>
+        <details>
           <summary>Sources &amp; coverage</summary>
           <dl>
             <dt>MSCI</dt>
@@ -383,14 +404,6 @@
               the source for all live / forward rebalances. Source:
               <a href="https://www.theideafarm.com" target="_blank"
               rel="noopener">theideafarm.com</a>.</dd>
-            <dt>Country coverage over the backtest window</dt>
-            <dd>The investable universe grows as MSCI and Barclays/Faber add
-              countries. Approximate CAPE-eligible country counts:
-              <strong>~13 countries in 1997</strong> (start of the daily
-              post-97 sample), <strong>~25 countries by late 2011</strong>
-              (midpoint), and <strong>~43 countries by 2026</strong> (most
-              recent quarter). The 44-country figure is the cumulative max
-              across the full history.</dd>
             <dt>Cash proxy</dt>
             <dd>BIL ETF total return from its 2007-05 inception; synthetic
               daily series built from FRED TB3MS (3-month T-bill rate) spliced
