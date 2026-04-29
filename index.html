@@ -255,26 +255,22 @@
             (midpoint), and <strong>~43 countries by 2026</strong> (most
             recent quarter). The 44-country figure is the cumulative max
             across the full history.</p>
-          <p><b>Why the strategy can start in January 1997.</b> Daily
-            MSCI IMI Net history begins 1997-01-01, but the 200-day SMA
-            and 12-month fresh-momentum signals need ~9-24 months of
-            prior history to evaluate. To avoid leaving the first ~3
-            months of the sample as forced cash (and to enable the fmom
-            filter from day one), pre-1997 history is bridged in from
-            the MSCI Country Standard (Large+Mid Cap) Gross monthly
-            series. Each country's monthly levels are scale-adjusted so
-            the last pre-IMI value lines up exactly with the first daily
-            IMI value, then linearly interpolated onto the same Mon-Fri
-            business-day calendar the daily IMI panel uses. This bridged
-            panel is used <em>only</em> as input to the SMA and
-            momentum-filter signals — it never feeds strategy returns,
-            CAPE selection, or the daily price comparison against the
-            SMA. From ~1999-01 onward, daily history is long enough to
-            cover both the 200-day SMA and the 12/8 fresh-momentum
-            lookbacks on its own and the bridge becomes inert. Net
-            effect: the strategy goes live on the first quarterly
-            rebalance trade date after daily IMI starts (1997-01-15)
-            instead of waiting until late 1997.</p>
+          <p><b>Supplementing the price data for an earlier period
+            start.</b> The utilized daily MSCI IMI Net index data begins
+            1997-01-01, but the 200-day SMA and 12-month fresh-momentum
+            signals need ~12-24 months of prior history to evaluate. To
+            enable the performance period to begin alongside the index
+            data, with active trend and momentum filters, pre-1997
+            history is supplemented with MSCI Country Standard
+            (Large+Mid Cap) Gross monthly series. Each country's monthly
+            levels are scale-adjusted so the last pre-IMI value lines up
+            with the first daily IMI value, then linearly interpolated
+            onto the same business-day calendar the daily IMIs use. This
+            early supplementary data is used <em>only</em> as an input
+            to the SMA trend and momentum-filter thresholds. This allows
+            the strategy to go live on the first quarterly rebalance
+            trade date after the daily IMIs start (1997-01-15), instead
+            of waiting until a year or two later.</p>
         </details>
       </div>
 
