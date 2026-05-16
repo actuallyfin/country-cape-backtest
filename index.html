@@ -83,6 +83,12 @@
   }
   table td.num, table th.num { text-align: right; font-variant-numeric: tabular-nums; }
   .strategy-row td:first-child { font-weight: 500; }
+  .strategy-cell {
+    display: flex; align-items: flex-start; gap: 7px;
+    white-space: normal; line-height: 1.35; min-width: 0;
+  }
+  .strategy-cell .legend-dot { margin-top: 5px; flex-shrink: 0; }
+  .strategy-name { overflow-wrap: anywhere; word-break: normal; }
   .legend-dot {
     display: inline-block; width: 10px; height: 10px; border-radius: 50%;
     margin-right: 7px; vertical-align: middle;
@@ -224,6 +230,7 @@
               <th class="num">CAGR</th>
               <th class="num">Vol</th>
               <th class="num">Sharpe</th>
+              <th class="num">Sortino</th>
               <th class="num">Max DD</th>
               <th class="num">Avg % Invested</th>
             </tr>
@@ -480,7 +487,7 @@ const PALETTE = [
 
 // DATA_VERSION is auto-patched by precompute_webapp_grid.py — do not edit
 // by hand. Mirrors meta.generated_at_utc from the latest JSON build.
-const DATA_VERSION = "20260516T060640";
+const DATA_VERSION = "20260516T063855";
 
 let DATA = null;
 let growthChart = null;
@@ -734,12 +741,13 @@ function renderTable(series) {
     const tr = document.createElement("tr");
     tr.className = "strategy-row";
     tr.innerHTML = `
-      <td><span class="legend-dot" style="background:${s.color}"></span>${s.label}</td>
+      <td class="strategy-cell"><span class="legend-dot" style="background:${s.color}"></span><span class="strategy-name">${s.label}</span></td>
       <td class="num">${startCell}</td>
       <td class="num">${endCell}</td>
       <td class="num">${fmtPct(s.stats.cagr)}</td>
       <td class="num">${fmtPct(s.stats.vol)}</td>
       <td class="num">${fmtNum(s.stats.sharpe)}</td>
+      <td class="num">${fmtNum(s.stats.sortino)}</td>
       <td class="num">${fmtPctSigned(s.stats.max_dd)}</td>
       <td class="num">${fmtPct(s.stats.avg_long)}</td>
     `;
