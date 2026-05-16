@@ -112,6 +112,7 @@
   .glossary dd {
     margin: 0; color: #333;
   }
+  .glossary p { font-size: 13px; line-height: 1.5; }
   .glossary a { color: #1e3a5f; text-decoration: underline; word-break: break-word; }
   .glossary a:hover { color: #0a9396; }
   .resources ul { margin: 10px 0 4px 18px; padding: 0; list-style: none; font-size: 13px; line-height: 1.6; }
@@ -290,9 +291,14 @@
               "Most expensive X% by CAPE" holds the top X%. Equal-weighted
               within the basket.</dd>
             <dt>SMA / trend filter</dt>
-            <dd>Simple Moving Average over the prior N trading days (150, 200,
-              or 250). "Uptrend" holds a country only when today's price is
-              above its SMA; "downtrend" holds only when below. Applied daily.</dd>
+            <dd>Two flavors are available. The 200-day SMA is computed on
+              daily prices and the rule is checked every trading day; positions
+              can flip intra-month. The 10-month SMA is computed on month-end
+              prices and checked once per month — the signal at month-end T is
+              held for all of month T+1 (classic Faber TAA mechanic), so
+              positions only flip at month boundaries and turnover is lower.
+              "Uptrend" holds a country only when price is above its SMA;
+              "downtrend" holds only when below.</dd>
             <dt>Standard 12-mo momentum</dt>
             <dd>Excludes any country whose trailing 12-month total return is
               negative at the rebal date. Classic absolute-momentum rule.</dd>
@@ -464,7 +470,7 @@ const PALETTE = [
 
 // DATA_VERSION is auto-patched by precompute_webapp_grid.py — do not edit
 // by hand. Mirrors meta.generated_at_utc from the latest JSON build.
-const DATA_VERSION = "20260427T221013";
+const DATA_VERSION = "20260516T051426";
 
 let DATA = null;
 let growthChart = null;
@@ -499,8 +505,8 @@ const DEFAULTS = {
 const DIM_ORDER = {
   cape: ["bot10", "bot15", "bot25", "bot50",
          "top50", "top25", "top15", "top10", "none"],
-  trend: ["sma150_up", "sma200_up", "sma250_up",
-          "sma150_down", "sma200_down", "sma250_down", "none"],
+  trend: ["sma200_up", "sma10m_up",
+          "sma200_down", "sma10m_down", "none"],
   mom: ["mom_none", "mom_std12", "mom_fmom128", "mom_fmom1212"],
   ex: ["ex_none", "ex_best"],
 };
@@ -605,8 +611,8 @@ const SHORT = {
     none: "Full universe EW",
   },
   trend: {
-    sma150_up: "150d up", sma200_up: "200d up", sma250_up: "250d up",
-    sma150_down: "150d down", sma200_down: "200d down", sma250_down: "250d down",
+    sma200_up: "200d up", sma10m_up: "10m up",
+    sma200_down: "200d down", sma10m_down: "10m down",
     none: null,
   },
   mom: {
@@ -705,16 +711,22 @@ function renderTable(series) {
   const tb = document.querySelector("#stats-table tbody");
   tb.innerHTML = "";
   const months = DATA.dates.monthly;
+  const metaStart = DATA.meta.start_date;
+  const metaEnd = DATA.meta.end_date;
   for (const s of series) {
     let firstIdx = s.monthly.findIndex(v => v !== null);
     let lastIdx = s.monthly.length - 1;
     while (lastIdx >= 0 && s.monthly[lastIdx] === null) lastIdx--;
+    const startCell = firstIdx === 0 ? metaStart
+      : (firstIdx > 0 ? months[firstIdx] : "-");
+    const endCell = lastIdx === s.monthly.length - 1 ? metaEnd
+      : (lastIdx >= 0 ? months[lastIdx] : "-");
     const tr = document.createElement("tr");
     tr.className = "strategy-row";
     tr.innerHTML = `
       <td><span class="legend-dot" style="background:${s.color}"></span>${s.label}</td>
-      <td class="num">${firstIdx >= 0 ? months[firstIdx].slice(0, 7) : "-"}</td>
-      <td class="num">${lastIdx >= 0 ? months[lastIdx].slice(0, 7) : "-"}</td>
+      <td class="num">${startCell}</td>
+      <td class="num">${endCell}</td>
       <td class="num">${fmtPct(s.stats.cagr)}</td>
       <td class="num">${fmtPct(s.stats.vol)}</td>
       <td class="num">${fmtNum(s.stats.sharpe)}</td>
